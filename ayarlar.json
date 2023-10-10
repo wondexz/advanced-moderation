@@ -1,0 +1,24 @@
+
+{
+  "prefix": "!",
+  "token":"",
+  "sahip": "",
+  "girilecek_ses_kanalı_id": "",
+  "guard_log": "",
+  "guard_role": "",
+  "reklam_log":"",
+  "role_guard_name":"",
+  "uyarı_yetkilisi_rolü_id":"",
+  "uyarı_log_id":"",
+  "uyarı1_role_id":"",
+  "uyarı2_role_id":"",
+  "uyarı3_role_id":"",
+  "uyarı_kanalı_ismi":"",
+  "start_log_id":"",
+  "ban_log_id":"",
+  "kanal_log_id":"",
+  "rol_log_id":"",
+  "isim_log_id":"",
+  "guild_id":"",
+  "mesaj_log":""
+}
