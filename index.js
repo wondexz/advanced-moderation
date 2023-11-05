@@ -54,21 +54,21 @@ client.on('guildBanAdd', async (guild, user) => {
   const banLogChannel = guild.channels.cache.get(ayarlar.ban_log_id);
   if (!banLogChannel) return;
 
-  // Yasaklayan kullanıcının bilgilerini al
+
   const auditLogs = await guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_BAN_ADD' });
   const logEntry = auditLogs.entries.first();
 
   if (!logEntry) return;
 
-  // Yasaklanan kullanıcının bilgileri
+
   const bannedUserTag = user.tag;
   const bannedUserID = user.id;
 
-  // Yasaklayan kullanıcının bilgileri
+
   const executorTag = logEntry.executor.tag;
   const executorID = logEntry.executor.id;
 
-  // Ban sebebini almak için son mesajı kontrol et (bu sadece bir örnek, gerektiğinde değiştirilebilir)
+
   const banReason = logEntry.reason || "Sebep belirtilmemiş.";
   const embed = new Discord.MessageEmbed()
   .setTitle(`${bannedUserTag} Adlı kişi sunucudan yasaklandı.`)
@@ -85,17 +85,17 @@ client.on('guildBanRemove', async (guild, user) => {
   const banLogChannel = guild.channels.cache.get(ayarlar.ban_log_id);
   if (!banLogChannel) return;
 
-  // Yasakın kaldırıldığı kullanıcının bilgileri
+
   const unbannedUserTag = user.tag;
   const unbannedUserID = user.id;
 
-  // Yasakı kaldıran kullanıcının bilgilerini al
+
   const auditLogs = await guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_BAN_REMOVE' });
   const logEntry = auditLogs.entries.first();
 
   if (!logEntry) return;
 
-  // Yasakı kaldıran kullanıcının bilgileri
+
   const executorTag = logEntry.executor.tag;
   const executorID = logEntry.executor.id;
   const embed = new Discord.MessageEmbed()
@@ -140,7 +140,7 @@ client.on('channelUpdate', async (oldChannel, newChannel) => {
 
   if (logChannel) {
       if (oldChannel.name !== newChannel.name) {
-          // Kanal ismi değişti
+
           const auditLogs = await newChannel.guild.fetchAuditLogs({ type: 'CHANNEL_UPDATE' });
           const logEntry = auditLogs.entries.first();
           const changedBy = logEntry ? logEntry.executor.tag : 'Bilinmiyor';
@@ -225,7 +225,7 @@ client.on('roleDelete', (role) => {
 });
 
 client.on('roleUpdate', (oldRole, newRole) => {
-  const logChannelId = ayarlar.rol_log_id; // Log kanalının ID'sini buraya ekleyin
+  const logChannelId = ayarlar.rol_log_id;
   const logChannel = client.channels.cache.get(logChannelId);
 
   if (logChannel) {
@@ -262,18 +262,18 @@ client.on('roleUpdate', (oldRole, newRole) => {
   }
 });
 
-// Bot bir mesaj aldığında
+
 client.on('message', async message => {
   if (message.channel.type === 'dm' && !message.author.bot) {
-    // Eğer mesaj DM kanalından geliyorsa ve mesajın göndereni bir bot değilse
+
 
     const ownerID = ayarlar.sahip;
 
     const owner = await client.users.fetch(ownerID);
     if (owner) {
-      // Kurucunun kullanıcı bilgilerini aldıktan sonra
 
-      // Mesajı kurucuya iletme
+
+
       owner.send(`Kullanıcı: ${message.author.tag} (${message.author.id}) bana bir mesaj gönderdi:\n${message.content}`)
         .then(() => console.log('DM kurucusuna iletilmiştir.'))
         .catch(err => console.error('DM kurucusuna iletilirken hata oluştu:', err));
@@ -291,10 +291,10 @@ client.on('message', message => {
   const command = args.shift().toLowerCase();
 
   if (command === 'uyarı-ver') {
-      // Komutu kullanabilmesi için gereken rol ID'si
+
       const requiredRoleId = ayarlar.uyarı_yetkilisi_rolü_id;
       
-      // Komutu kullanan kişinin belirli role sahip olup olmadığını kontrol et
+
       if (!message.member.roles.cache.has(requiredRoleId)) {
           return message.reply('Bu komutu kullanma izniniz yok.');
       }
@@ -307,11 +307,11 @@ client.on('message', message => {
           return message.reply('Kullanım: `!uyarı-ver @kullanıcı / yada kullanıcı ID <sebep> <kaç-uyarı 1-2-3>`');
       }
 
-      // Uyarıları loglamak için uygun bir kanal ID'si girilmelidir.
+
       const logChannelId = ayarlar.uyarı_log_id;
       const logChannel = message.guild.channels.cache.get(logChannelId);
 
-      // Uyarı embed mesajı oluştur
+
       const warningEmbed = new Discord.MessageEmbed()
           .setColor('#ff0000')
           .setTitle('Kullanıcıya Uyarı Verildi')
@@ -322,16 +322,16 @@ client.on('message', message => {
           .setFooter('wondexz tarafından geliştirildi.')
           .setTimestamp();
 
-      // Uyarı embed mesajını log kanalına gönder
+
       logChannel.send(warningEmbed);
 
-      // Belirli seviyedeki uyarılar için rol verme
+
       if (warningLevel === 1) {
-          targetUser.roles.add(ayarlar.uyarı1_role_id).catch(console.error);// 1 uyarı yolü
+          targetUser.roles.add(ayarlar.uyarı1_role_id).catch(console.error);
       } else if (warningLevel === 2) {
-          targetUser.roles.add(ayarlar.uyarı2_role_id).catch(console.error);// 2 uyarı rolü
+          targetUser.roles.add(ayarlar.uyarı2_role_id).catch(console.error);
       } else if (warningLevel === 3) {
-          targetUser.roles.add(ayarlar.uyarı3_role_id).catch(console.error);// 3 uyarı rolü
+          targetUser.roles.add(ayarlar.uyarı3_role_id).catch(console.error);
       }
       const embed = new Discord.MessageEmbed()
       .setTitle('Uyarı başarıyla verildi!')
@@ -349,10 +349,10 @@ client.on('message', async message => {
   const command = args.shift().toLowerCase();
 
   if (command === 'uyarı-al') {
-      // Komutu kullanabilmesi için gereken rol ID'si
+
       const requiredRoleId = ayarlar.uyarı_yetkilisi_rolü_id;
 
-      // Komutu kullanan kişinin belirli role sahip olup olmadığını kontrol et
+
       if (!message.member.roles.cache.has(requiredRoleId)) {
           return message.reply('Bu komutu kullanma izniniz yok.');
       }
@@ -373,8 +373,8 @@ client.on('message', async message => {
           }
       }
 
-      // Uyarı log kanalına mesaj gönder
-      const logChannelId = ayarlar.uyarı_log_id; // Uyarı log kanalının ID'si
+
+      const logChannelId = ayarlar.uyarı_log_id;
       const logChannel = message.guild.channels.cache.get(logChannelId);
       const reason = `Kullanıcıya verilen uyarılar alındı.`;
 
@@ -393,11 +393,11 @@ client.on('message', async message => {
       // Kullanıcının uyarı rolünü al
       let roleId = '';
       if (targetUser.roles.cache.has(ayarlar.uyarı1_role_id)) {
-          roleId = ayarlar.uyarı1_role_id;// uyarı 1
+          roleId = ayarlar.uyarı1_role_id;
       } else if (targetUser.roles.cache.has(ayarlar.uyarı2_role_id)) {
-          roleId = ayarlar.uyarı2_role_id;// uyarı 2
+          roleId = ayarlar.uyarı2_role_id;
       } else if (targetUser.roles.cache.has(ayarlar.uyarı3_role_id)) {
-          roleId = ayarlar.uyarı3_role_id;// uyarı 3
+          roleId = ayarlar.uyarı3_role_id;
       }
 
       if (roleId) {
@@ -448,12 +448,12 @@ client.on('message', async message => {
 
       logChannel.send(logEmbed);
 
-      // Kullanıcının uyarı sayısını azalt
-      // Burada uyarıları nasıl sakladığınızı (veritabanı, dosya, vb.) ve kullanıcının uyarı sayısını nasıl güncellediğinizi implement etmelisiniz.
+ 
+
       
-      // Kullanıcının ⚠️⚠️ rolünü al, ⚠️ rolünü ver
-      const roleToRemove = ayarlar.uyarı2_role_id; // ⚠️⚠️ rolünün ID'si
-      const roleToAdd = ayarlar.uyarı1_role_id; // ⚠️ rolünün ID'si
+
+      const roleToRemove = ayarlar.uyarı2_role_id;
+      const roleToAdd = ayarlar.uyarı1_role_id;
       
       if (targetUser.roles.cache.has(roleToRemove)) {
           targetUser.roles.remove(roleToRemove).catch(console.error);
@@ -484,12 +484,12 @@ client.unload = command => {
   });
 };
 
-const logChannelId = ayarlar.guard_log // Log kanalının ID'sini buraya yerleştirin
+const logChannelId = ayarlar.guard_log
 
 client.on('channelDelete', async (channel) => {
   if (channel.type === 'text') {
     const guild = channel.guild;
-    const roleId = ayarlar.guard_role; // "<\>" rolünün ID'sini buraya yerleştirin
+    const roleId = ayarlar.guard_role; 
 
     const role = guild.roles.cache.get(roleId);
     if (role) {
@@ -533,7 +533,7 @@ client.on('channelDelete', async (channel) => {
 client.on('channelDelete', async (channel) => {
   if (channel.type === 'voice') {
     const guild = channel.guild;
-    const roleId = ayarlar.guard_role; // "<\>" rolünün ID'sini buraya yerleştirin
+    const roleId = ayarlar.guard_role;
 
     const role = guild.roles.cache.get(roleId);
     if (role) {
@@ -560,7 +560,7 @@ client.on('channelDelete', async (channel) => {
             logChannel.send(logEmbed);
           }
           
-          // Silinen kanalı yeniden oluştur
+
           guild.channels.create(channel.name, {
             type: 'voice',
             parent: channel.parent,
@@ -575,7 +575,7 @@ client.on('channelDelete', async (channel) => {
 client.on('channelCreate', async (channel) => {
   if (channel.type === 'text') {
     const guild = channel.guild;
-    const roleId = ayarlar.guard_role; // "<\>" rolünün ID'sini buraya yerleştirin
+    const roleId = ayarlar.guard_role; 
 
     const role = guild.roles.cache.get(roleId);
     if (role) {
@@ -617,7 +617,7 @@ client.on('channelCreate', async (channel) => {
 client.on('channelCreate', async (channel) => {
   if (channel.type === 'voice') {
     const guild = channel.guild;
-    const roleId = ayarlar.guard_role; // "<\>" rolünün ID'sini buraya yerleştirin
+    const roleId = ayarlar.guard_role;
 
     const role = guild.roles.cache.get(roleId);
     if (role) {
@@ -645,7 +645,7 @@ client.on('channelCreate', async (channel) => {
             logChannel.send(logEmbed);
           }
 
-          // Kanalı silme kısmı
+
           try {
             await channel.delete({ reason: 'İzinsiz kanal oluşturma' });
           } catch (error) {
@@ -658,11 +658,7 @@ client.on('channelCreate', async (channel) => {
 });
 
 const reklamKelimeleri = ['.com', '.net', '.gg' , '.org' , '.com.tr' , '.tk' , 'https' , '.tv' , 'http' , '.cn' , '.ru' , '.co' , '.org.tr' , '.net.tr'];
-const logKanalID = ayarlar.reklam_log; // Log kanalının ID'si
-
-client.on('ready', () => {
-  console.log();
-});
+const logKanalID = ayarlar.reklam_log;
 
 client.on('message', async (message) => {
   if (!message.author.bot) {
@@ -670,21 +666,21 @@ client.on('message', async (message) => {
     const reklamKelimesi = reklamKelimeleri.find((kelime) => content.includes(kelime));
 
     if (reklamKelimesi) {
-      // Yönetici yetkisi kontrolü
+
       if (message.guild.member(message.author).permissions.has('ADMINISTRATOR')) {
         return;
       }
 
       message.delete();
 
-      // Reklam yapan kişiye DM üzerinden mesaj gönderme
+ 
       try {
         await message.author.send('**Reklam Yapma Yoksa Banlanacaksın!**');
       } catch (error) {
         console.error('DM gönderilemedi:', error);
       }
 
-      // Log kanalını bulma
+
       const logKanal = client.channels.cache.get(logKanalID);
       if (logKanal) {
         const logEmbed = new Discord.MessageEmbed()
@@ -743,8 +739,8 @@ client.on('message', async message => {
 client.on('ready', () => {
   console.log("Discord'a bağlantı sağlandı.")
 
-  // Sesli kanala bağlanma
-  const voiceChannelId = ayarlar.girilecek_ses_kanalı_id; // Bağlanılacak sesli kanalın ID'sini buraya ekleyin
+
+  const voiceChannelId = ayarlar.girilecek_ses_kanalı_id;
   const channel = client.channels.cache.get(voiceChannelId);
   if (channel && channel.type === 'voice') {
       channel.join().then(connection => {
@@ -763,7 +759,7 @@ client.on('ready', () => {
   const os = require("os");
   const si = require("systeminformation");
 
-  const logChannelId = ayarlar.start_log_id; // Log kanalının ID'sini buraya girin
+  const logChannelId = ayarlar.start_log_id;
   const logChannel = client.channels.cache.get(logChannelId);
 
   if (logChannel) {
@@ -803,26 +799,24 @@ client.on('ready', () => {
         if (isRestarting) return;
         isRestarting = true;
     
-        // Send the initial message using message.reply method
+
         message.reply('Bot yeniden başlatılıyor... <a:restarticon:1133815427357757483>').then(async (msg) => {
-          // After the message is sent, set the status to idle
+
           client.user.setStatus('idle');
           console.log('Bot 30 saniye içerisinde yeniden başlatılacaktır!')
     
-          // Set the activity to "Yeniden Başlatılıyorum"
+
           client.user.setActivity('Yeniden Başlatılıyorum', { type: 'PLAYING' });
     
-          // Wait for 5 seconds before sending the "Successfully Restarted" message
           await new Promise(resolve => setTimeout(resolve, 30000));
-    
-          // Send the "Successfully Restarted" message
+
           message.channel.send('Bot Başarıyla Yeniden Başlatıldı! <a:tk:1133819271538036736>')
           console.log('Bot yeniden başlatılıyor!')
     
-          // Schedule the restart after setting the presence
+
           setTimeout(() => {
             process.exit();
-          }, 30000); // 30 seconds delay before restarting
+          }, 30000);
         });
       }
     })
