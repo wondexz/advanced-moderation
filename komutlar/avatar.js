@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 
 exports.run = async (client, message, args)=> {
-//let us = message.guild.members.cache.find(u => args.slice(0).join(' ').includes(u.username))
+
 let muser = message.mentions.users.first();
 let userid;
 if(isNaN(args[0])){
